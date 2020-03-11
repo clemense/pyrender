@@ -1134,6 +1134,7 @@ class Renderer(object):
             depth_im = self._resize_image(depth_im)
 
         if flags & RenderFlags.DEPTH_ONLY:
+            print(flags)
             return depth_im
 
         # Read color

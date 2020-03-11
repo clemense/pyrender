@@ -10,7 +10,11 @@ from pyrender import PerspectiveCamera,\
                      DirectionalLight, SpotLight, PointLight,\
                      MetallicRoughnessMaterial,\
                      Primitive, Mesh, Node, Scene,\
-                     Viewer, OffscreenRenderer
+                     Viewer, OffscreenRenderer,\
+                     RenderFlags
+
+#flags = RenderFlagsRenderFlags.ALL_CAM_COORDS
+#flags = RenderFlags.FACE_NORMALS
 
 #==============================================================================
 # Mesh creation
@@ -21,22 +25,22 @@ from pyrender import PerspectiveCamera,\
 #------------------------------------------------------------------------------
 
 # Fuze trimesh
-fuze_trimesh = trimesh.load('./models/fuze.obj')
+fuze_trimesh = trimesh.load('./examples/models/fuze.obj')
 fuze_mesh = Mesh.from_trimesh(fuze_trimesh)
 
 # Drill trimesh
-drill_trimesh = trimesh.load('./models/drill.obj')
+drill_trimesh = trimesh.load('./examples/models/drill.obj')
 drill_mesh = Mesh.from_trimesh(drill_trimesh)
 drill_pose = np.eye(4)
 drill_pose[0,3] = 0.1
 drill_pose[2,3] = -np.min(drill_trimesh.vertices[:,2])
 
 # Wood trimesh
-wood_trimesh = trimesh.load('./models/wood.obj')
+wood_trimesh = trimesh.load('./examples/models/wood.obj')
 wood_mesh = Mesh.from_trimesh(wood_trimesh)
 
 # Water bottle trimesh
-bottle_gltf = trimesh.load('./models/WaterBottle.glb')
+bottle_gltf = trimesh.load('./examples/models/WaterBottle.glb')
 bottle_trimesh = bottle_gltf.geometry[list(bottle_gltf.geometry.keys())[0]]
 bottle_mesh = Mesh.from_trimesh(bottle_trimesh)
 bottle_pose = np.array([
@@ -123,23 +127,29 @@ spot_l_node = scene.add(spot_l, pose=cam_pose)
 # Using the viewer with a default camera
 #==============================================================================
 
-v = Viewer(scene, shadows=True)
+v = Viewer(scene, shadows=False)
 
 #==============================================================================
 # Using the viewer with a pre-specified camera
 #==============================================================================
 cam_node = scene.add(cam, pose=cam_pose)
-v = Viewer(scene, central_node=drill_node)
+#v = Viewer(scene, central_node=drill_node, flags=flags)
 
 #==============================================================================
 # Rendering offscreen from that camera
 #==============================================================================
 
 r = OffscreenRenderer(viewport_width=640*2, viewport_height=480*2)
+#color = r.render(scene, flags=flags)
+#print(color.shape)
 color, depth = r.render(scene)
+#import pdb; pdb.set_trace()
 r.delete()
 
 import matplotlib.pyplot as plt
-plt.figure()
-plt.imshow(color)
-plt.show()
+
+for x in [color, depth]:
+    plt.figure()
+    plt.imshow(x)
+    plt.show()
+

@@ -97,6 +97,7 @@ class OffscreenRenderer(object):
 
         if self._platform.supports_framebuffers():
             flags |= RenderFlags.OFFSCREEN
+            print(flags)
             return self._renderer.render(scene, flags)
         else:
             self._renderer.render(scene, flags)

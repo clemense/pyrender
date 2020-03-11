@@ -16,5 +16,7 @@ uniform mat4 P;
 // Render loop
 void main() {
     frag_position_cam = vec3(V * M * inst_m * vec4(position, 1.0));
-    gl_Position = P * V * M * inst_m * vec4(position, 1);
+    //gl_Position = P * V * M * inst_m * vec4(position, 1);
+    gl_Position = P * V * M * vec4(position, 1);
 }
+

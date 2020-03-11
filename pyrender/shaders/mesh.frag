@@ -443,7 +443,8 @@ void main()
     color *= color_multiplier;
 #endif
 
-    frag_color = clamp(vec4(pow(color.xyz, vec3(1.0/2.2)), color.a * base_color.a), 0.0, 1.0);
+    //frag_color = clamp(vec4(pow(color.xyz, vec3(1.0/2.2)), color.a * base_color.a), 0.0, 1.0);
+    frag_color = vec4(base_color.xyz, 1.0);
 
 #else
     // TODO GLOSSY MATERIAL BRDF
